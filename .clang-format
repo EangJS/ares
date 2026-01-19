@@ -1,0 +1,40 @@
+BasedOnStyle: LLVM
+
+# Braces (Allman, but keep initializer brace on same line as '=')
+BreakBeforeBraces: Allman
+BraceWrapping:
+  AfterVariable: false
+  AfterEnum: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterFunction: true
+  BeforeElse: true
+
+# Indentation
+UseTab: Never
+IndentWidth: 4
+TabWidth: 4
+
+# Spacing
+SpacesInParentheses: true
+SpacesInSquareBrackets: true
+SpacesInAngles: false
+SpaceBeforeParens: ControlStatements
+
+# Force multi-line behavior
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
+
+# Controls when clang-format decides to break
+ColumnLimit: 120
+
+# Prevent collapsing short things
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+
+# Enforce spacing between functions
+SeparateDefinitionBlocks: Always
+MaxEmptyLinesToKeep: 1
