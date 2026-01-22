@@ -150,11 +150,10 @@ def main(args):
         run(f"mkdir -p {BUILD_DIR}/assets")
         zip_path = f"{BUILD_DIR}/assets/ares_{config}.zip"
         zip_directory(f"{TIZENRT_DIR}/build/output/bin", zip_path)
-    
-    assets_zip_path = f"{BUILD_DIR}/ares.zip"
-    zip_directory(f"{BUILD_DIR}/assets", assets_zip_path)
         
     if args.upload_url:
+        assets_zip_path = f"{BUILD_DIR}/ares.zip"
+        zip_directory(f"{BUILD_DIR}/assets", assets_zip_path)
         auth=(
                 args.username,
                 args.password
