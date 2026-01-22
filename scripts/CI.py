@@ -169,7 +169,7 @@ def main(args):
         )
         
     # Cleanup
-    run(f"sudo rm -rf {BUILD_DIR}")
+    run(f"sudo rm -rf {BUILD_DIR}/TizenRT")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Clone, build, zip, and upload TizenRT")
