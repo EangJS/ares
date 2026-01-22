@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# This script should be executed from the 'ares/scripts' directory.
 
 import os
 import subprocess
@@ -14,7 +15,7 @@ import time
 # =========================
 ARES_REPO = "https://github.com/EangJS/ares.git"
 TIZENRT_REPO = "https://github.com/Samsung/TizenRT.git"
-BUILD_DIR = "build"
+BUILD_DIR = "/tmp/build"
 TIZENRT_DIR = BUILD_DIR + "/TizenRT"
 ARES_DIR = TIZENRT_DIR + "/" + "apps/examples/ares"
 BOARD = "rtl8730e"
@@ -99,12 +100,10 @@ def clone(os_dir):
     else:
         print("TizenRT already cloned, skipping clone.")
     
-    if not os.path.isdir(ARES_DIR):
-        run(f"git clone {ARES_REPO} {ARES_DIR} ")
-    else:
-        print("Ares example already present, skipping clone.")
+    run(f"mkdir -p {ARES_DIR}")
+    run(f"cp -r . {ARES_DIR}/", cwd="..")
     
-    run("git submodule update --init --recursive", cwd=ARES_DIR)    
+    run("git submodule update --init --recursive", cwd=ARES_DIR)
 
     if not os.path.isdir(os_dir):
         print("ERROR: os directory not found. Repo layout unexpected.")
@@ -151,10 +150,11 @@ def main(args):
         run(f"mkdir -p {BUILD_DIR}/assets")
         zip_path = f"{BUILD_DIR}/assets/ares_{config}.zip"
         zip_directory(f"{TIZENRT_DIR}/build/output/bin", zip_path)
+    
+    assets_zip_path = f"{BUILD_DIR}/ares.zip"
+    zip_directory(f"{BUILD_DIR}/assets", assets_zip_path)
         
     if args.upload_url:
-        assets_zip_path = f"{BUILD_DIR}/ares.zip"
-        zip_directory(f"{BUILD_DIR}/assets", assets_zip_path)
         auth=(
                 args.username,
                 args.password
