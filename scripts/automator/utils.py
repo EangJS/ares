@@ -20,7 +20,7 @@ def apply_patches(patch_dir, ares_dir, tizen_dir):
         elif "ares" in patch_file.lower():
             run(f"git apply {patch_path}", cwd=ares_dir)
 
-def clone(tizenrt_dir, ares_dir, patch_dir, clone_ares=False):
+def clone(tizenrt_dir, ares_dir, clone_ares=False):
     # Clone repo if not already present
     os_dir = os.path.join(tizenrt_dir, "os")
     patch_dir = os.path.join(ares_dir, "scripts", "patches")
