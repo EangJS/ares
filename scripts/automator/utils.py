@@ -20,11 +20,13 @@ def apply_patches(patch_dir, ares_dir, tizen_dir):
         elif "ares" in patch_file.lower():
             run(f"git apply {patch_path}", cwd=ares_dir)
 
-def clone(tizenrt_dir, ares_dir, clone_ares=False):
+def clone(tizenrt_dir, ares_dir, patch_dir, clone_ares=False):
     # Clone repo if not already present
     os_dir = os.path.join(tizenrt_dir, "os")
+    patch_dir = os.path.join(ares_dir, "scripts", "patches")
     if not os.path.isdir(tizenrt_dir):
         run(f"git clone {TIZENRT_REPO} {tizenrt_dir}")
+        apply_patches(patch_dir, ares_dir, tizenrt_dir)
     else:
         print("TizenRT already cloned, skipping clone.")
     
@@ -80,9 +82,7 @@ def cleanup_artifacts(tizenrt_dir):
             os.remove(file_path)
         
 def local_build(build_dir, tizenrt_dir, ares_dir, config):
-    patch_dir = os.path.join(ares_dir, "scripts", "patches")
     os_dir = os.path.join(tizenrt_dir, "os")
-    apply_patches(patch_dir, ares_dir, tizenrt_dir)
     run("chmod +x tools/configure.sh", cwd=os_dir)
 
     build_config = f"{BOARD}/{config}"
