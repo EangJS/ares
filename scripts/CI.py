@@ -77,6 +77,7 @@ def main(args):
         clone(TIZENRT_DIR, ares_dir)
         local_build(build_dir=BUILD_DIR, tizenrt_dir=TIZENRT_DIR, ares_dir=ares_dir, config=config)
     assets_zip_path = f"{BUILD_DIR}/artifacts/ares.tar.xz"
+    run(f"mkdir -p {BUILD_DIR}/artifacts")
     compress_directory(f"{BUILD_DIR}/assets", assets_zip_path)
     if args.upload_url:
         auth=(
