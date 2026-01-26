@@ -39,5 +39,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ares-build-assets
-          path: /tmp/build
+          name: ares-build-artifacts
+          path: /tmp/build/artifacts
