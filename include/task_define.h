@@ -12,12 +12,12 @@ extern "C" {
 typedef int (*task_fn_t)(int argc, char *argv[]);
 
 typedef struct {
-    const char *name;   /* task name */
-    int         priority;
-    int         stack_size;
-    task_fn_t   run;    /* function to execute */
-    char * const      arg;    /* argument to the function */
-    int         cpu_affinity;
+    const char *name;
+    int priority;
+    int stack_size;
+    task_fn_t run;
+    void *arg;
+    int cpu_affinity;
 } task_t;
 
 #ifdef __cplusplus

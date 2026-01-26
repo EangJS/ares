@@ -108,7 +108,6 @@ static int uart_rx_loop( pthread_addr_t *arg )
 
 int uart_runnable( int argc, char *argv[] )
 {
-    int ret;
     pthread_t rx_tid;
     int port_num = CONFIG_EXAMPLES_UART_LOOPBACK_PORT;
 
@@ -125,4 +124,5 @@ int uart_runnable( int argc, char *argv[] )
         return -1;
     }
     pthread_join( rx_tid, NULL );
+    return 0;
 }

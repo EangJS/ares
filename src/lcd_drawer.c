@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <mqueue.h>
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +12,7 @@
 #include <tinyara/config.h>
 #include <tinyara/lcd/lcd_dev.h>
 #include <tinyara/rtc.h>
-#include <mqueue.h>
+#include <tinyara/timer.h>
 
 /* ******************************************************************************* */
 /*                           Private Macro Defnitions                           */
@@ -135,12 +136,15 @@ static void lcd_draw( void )
     lv_img_set_src( img, &IMG_NAME );
     lv_obj_align( img, LV_ALIGN_LEFT_MID, 10, 0 );
 
-    lv_anim_t a;
+    static lv_anim_t a; // keep static to avoid going out of scope
     lv_anim_init( &a );
     lv_anim_set_var( &a, img );
     lv_anim_set_exec_cb( &a, anim_x_cb );
-    lv_anim_set_values( &a, 10, LCD_W - lv_obj_get_width( img ) );
-    lv_anim_set_duration( &a, 2000 );
+    lv_coord_t start_x = 10;
+    lv_coord_t end_x = LCD_W - lv_obj_get_width( img ) - 10;
+    lv_anim_set_values( &a, start_x, end_x );
+    lv_anim_set_time( &a, 2000 );
+    lv_anim_set_path_cb( &a, lv_anim_path_linear );
     lv_anim_set_playback_time( &a, 2000 );
     lv_anim_set_repeat_count( &a, LV_ANIM_REPEAT_INFINITE );
     lv_anim_start( &a );
@@ -167,15 +171,15 @@ int task_draw_lcd( int argc, char *argv[] )
     {
         if ( lcd_on )
         {
-            lv_tick_inc( 5 );
             lv_timer_handler();
         }
-        if ( i % 200 == 0 )
+        if ( ( i % 200 ) == 0 )
         {
             char *time_str;
-            if (mq_receive(time_status_mq, (char*)&time_str, sizeof(time_str), NULL) > 0) {
-                lv_label_set_text(price_label, time_str);
-                free(time_str);
+            if ( mq_receive( time_status_mq, (char *)&time_str, sizeof( time_str ), NULL ) > 0 )
+            {
+                lv_label_set_text( price_label, time_str );
+                free( time_str );
             }
         }
         i++;
@@ -183,5 +187,56 @@ int task_draw_lcd( int argc, char *argv[] )
         usleep( 5000 );
     }
 
+    return 0;
+}
+
+int lvgl_tick_timer_init( void )
+{
+    int fd = open( "/dev/timer0", O_RDONLY );
+    if ( fd < 0 )
+    {
+        printf( "Failed to open /dev/timer0\n" );
+        return -1;
+    }
+
+    struct timer_notify_s notify;
+    notify.arg = NULL;
+    notify.pid = (pid_t)getpid();
+
+    if ( ioctl( fd, TCIOC_NOTIFICATION, &notify ) < 0 )
+    {
+        printf( "Failed to set timer notification\n" );
+        close( fd );
+        return -1;
+    }
+
+    int period_us = 5000;
+    if ( ioctl( fd, TCIOC_SETTIMEOUT, (unsigned long)period_us ) < 0 )
+    {
+        printf( "Failed to set timer interval\n" );
+        close( fd );
+        return -1;
+    }
+
+    if ( ioctl( fd, TCIOC_START, 0 ) < 0 )
+    {
+        printf( "Failed to start timer\n" );
+        close( fd );
+        return -1;
+    }
+    return fd;
+}
+
+int task_lvgl_tick( int argc, char *argv[] )
+{
+    int fd = lvgl_tick_timer_init();
+    while ( 1 )
+    {
+        fin_wait();
+        lv_tick_inc( 5 );
+    }
+    /* Should never reach here */
+    ioctl( fd, TCIOC_STOP, 0 );
+    close( fd );
     return 0;
 }

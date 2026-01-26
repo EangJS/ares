@@ -1,5 +1,18 @@
+diff --git a/apps/Directory.mk b/apps/Directory.mk
+index 3e2e08af9..ee0d278cd 100644
+--- a/apps/Directory.mk
++++ b/apps/Directory.mk
+@@ -64,7 +64,7 @@ all: nothing
+ 
+ define SDIR_template
+ $(1)_$(2):
+-	$(Q) $(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)"
++	$(Q) +$(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)"
+ endef
+ 
+ $(foreach SDIR, $(SUBDIRS), $(eval $(call SDIR_template,$(SDIR),preconfig)))
 diff --git a/apps/Makefile b/apps/Makefile
-index 8404d3482..379dbd096 100644
+index 8404d3482..dd1d193c7 100644
 --- a/apps/Makefile
 +++ b/apps/Makefile
 @@ -1,3 +1,5 @@
@@ -8,6 +21,22 @@ index 8404d3482..379dbd096 100644
  ###########################################################################
  #
  # Copyright 2016-2017 Samsung Electronics All Rights Reserved.
+@@ -96,13 +98,13 @@ all: $(BIN)
+ .PHONY: import install context context_serialize context_rest .depdirs preconfig depend clean distclean applist appupdate
+ 
+ define MAKE_template
+-	$(Q) $(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)" BIN_DIR="$(BIN_DIR)"
++	$(Q) +$(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)" BIN_DIR="$(BIN_DIR)"
+ 
+ endef
+ 
+ define SDIR_template
+ $(1)_$(2):
+-	$(Q) $(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)" BIN_DIR="$(BIN_DIR)"
++	$(Q) +$(MAKE) -C $(1) $(2) TOPDIR="$(TOPDIR)" APPDIR="$(APPDIR)" EXTDIR="$(EXTDIR)" BIN_DIR="$(BIN_DIR)"
+ 
+ endef
+ 
 diff --git a/apps/builtin/Makefile b/apps/builtin/Makefile
 index 42d64f2ce..914700f20 100644
 --- a/apps/builtin/Makefile
@@ -708,7 +737,7 @@ index ec5a7ef4b..6ec34e944 100644
  #
  # Copyright 2019 Samsung Electronics All Rights Reserved.
 diff --git a/os/dbuild.sh b/os/dbuild.sh
-index 2a3916be3..84fc615d1 100755
+index 2a3916be3..2c8437787 100755
 --- a/os/dbuild.sh
 +++ b/os/dbuild.sh
 @@ -29,7 +29,7 @@ DOCKER_PUBLIC_IMAGE="tizenrt/tizenrt"
