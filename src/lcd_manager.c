@@ -35,6 +35,6 @@ int task_power_lcd( int argc, char *argv[] )
         set_lcd_power( 100 );
         lcd_on = true;
 
-        sleep( 3 );
+        sleep( 5 );
     }
 }

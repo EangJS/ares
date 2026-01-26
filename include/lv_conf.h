@@ -22,7 +22,7 @@
 #include "my_include.h"
 #endif
 
-
+#define LV_USE_THREADS 1
 /*====================
    COLOR SETTINGS
  *====================*/

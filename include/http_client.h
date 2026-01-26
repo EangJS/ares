@@ -16,7 +16,7 @@ extern "C" {
  *
  * @return 0 on success, -1 on failure
  */
-int http_client(void);
+int http_client(char* time_str);
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,6 @@ int main( int argc, FAR char *argv[] )
 int ares_main( int argc, char *argv[] )
 #endif
 {
-    printf( "ares start4!!\n" );
-    run_tasks();
+    task_create( "Ares", 254, 2048, run_tasks, NULL );
     return 0;
 }

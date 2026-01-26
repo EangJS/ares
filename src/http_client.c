@@ -52,12 +52,11 @@ int http_client( char *time_str )
         printf( "fail to send request\n" );
         goto release_out;
     }
-    printf( "Response Status: %d Data: %s\n", response.status, response.entity );
     get_time_str( response.entity, time_str, 64 );
 
 release_out:
     http_client_response_release( &response );
     http_keyvalue_list_release( &headers );
 
-    return NULL;
+    return 0;
 }

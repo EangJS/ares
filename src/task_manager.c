@@ -16,15 +16,18 @@
 static char *fs_mnt_argv[] = { MNT_PATH, NULL };
 static char *fs_mnt0_argv[] = { MNT0_PATH, NULL };
 static const task_t task_table[] = {
-    TASK_DEFINE( "audio"   , SCHED_PRIORITY_DEFAULT, 65536, task_play_sound            , NULL        , CPU0_AFFINITY )
-    TASK_DEFINE( "lvgl"    , SCHED_PRIORITY_DEFAULT, 65536, task_draw_lcd              , NULL        , CPU1_AFFINITY )
-    TASK_DEFINE("lcd_power", SCHED_PRIORITY_DEFAULT, 4096 , task_power_lcd             , NULL        , CPU0_AFFINITY )
-    TASK_DEFINE( "wifi"    , SCHED_PRIORITY_DEFAULT, 16384, wifi_runnable              , NULL        , CPU0_AFFINITY )
-    TASK_DEFINE( "fs_mnt"  , SCHED_PRIORITY_DEFAULT, 8192 , fs_task_main               , fs_mnt_argv , CPU0_AFFINITY )
-    TASK_DEFINE( "fs_mnt0" , SCHED_PRIORITY_DEFAULT, 8192 , fs_task_main               , fs_mnt0_argv, CPU0_AFFINITY )
-    TASK_DEFINE( "uart_rx" , SCHED_PRIORITY_DEFAULT, 8192 , uart_runnable              , NULL        , CPU0_AFFINITY )
-    TASK_DEFINE( "power"   , SCHED_PRIORITY_DEFAULT, 4096 , task_start_power_management, NULL        , CPU0_AFFINITY )
-    TASK_DEFINE( "monitor" , SCHED_PRIORITY_DEFAULT, 8192 , monitor_task               , NULL        , CPU0_AFFINITY )
+#ifdef CONFIG_LCD
+    TASK_DEFINE( "lvgl_tick"  , SCHED_PRIORITY_DEFAULT + 10, 1024 , task_lvgl_tick             , NULL        , CPU1_AFFINITY )
+    TASK_DEFINE( "lvgl_drawer", SCHED_PRIORITY_DEFAULT + 6 , 65536, task_draw_lcd              , NULL        , CPU1_AFFINITY )
+    TASK_DEFINE( "lcd_power"  , SCHED_PRIORITY_DEFAULT     , 4096 , task_power_lcd             , NULL        , CPU0_AFFINITY )
+#endif /* CONFIG_LCD */
+    TASK_DEFINE( "wifi"       , SCHED_PRIORITY_DEFAULT     , 16384, wifi_runnable              , NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "fs_mnt"     , SCHED_PRIORITY_DEFAULT     , 8192 , fs_task_main               , fs_mnt_argv , CPU0_AFFINITY )
+    TASK_DEFINE( "fs_mnt0"    , SCHED_PRIORITY_DEFAULT     , 8192 , fs_task_main               , fs_mnt0_argv, CPU0_AFFINITY )
+    TASK_DEFINE( "uart_rx"    , SCHED_PRIORITY_DEFAULT     , 8192 , uart_runnable              , NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "power"      , SCHED_PRIORITY_DEFAULT     , 4096 , task_start_power_management, NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "monitor"    , SCHED_PRIORITY_DEFAULT     , 8192 , monitor_task               , NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "audio"      , SCHED_PRIORITY_DEFAULT     , 65536, task_play_sound            , NULL        , CPU0_AFFINITY )
 };
 
 /* ******************************************************************************* */
@@ -53,7 +56,7 @@ static void set_affinity( int cpu )
 /*                           Public Function Defnitions                            */
 /* ******************************************************************************* */
 
-void run_tasks( void )
+int run_tasks( int argc, char *argv[] )
 {
     for ( size_t i = 0; i < TASK_COUNT; i++ )
     {
@@ -69,4 +72,5 @@ void run_tasks( void )
         }
         printf( "Running (PID:%d) %s (prio=%d)\n", pid, task_table[ i ].name, task_table[ i ].priority );
     }
+    return 0;
 }

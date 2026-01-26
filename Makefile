@@ -62,23 +62,29 @@ THREADEXEC = TASH_EXECMD_ASYNC
 VENDOR_PATH = $(APPDIR)/examples/ares/vendor
 LVGL_PATH = $(VENDOR_PATH)/lvgl
 CJSON_PATH = $(VENDOR_PATH)/cJSON
-include $(LVGL_PATH)/lvgl.mk
 
+CFLAGS  += -Werror
 CFLAGS    += -I$(APPDIR)/examples/ares/include \
              -I$(CJSON_PATH)
 CXXFLAGS  += -I$(APPDIR)/examples/ares/include
 CXXSRCS   += src/sound_manager.cpp
 CSRCS     += src/task_manager.c \
-			 src/lcd_manager.c   \
 			 src/wifi_manager.c  \
 			 src/http_client.c  \
 			 src/uart_manager.c  \
 			 src/fs_manager.c    \
 			 src/pm_manager.c    \
-			 src/lcd_drawer.c   \
-			 src/assets/crabpower.c         \
 			 src/data_parser.c         \
 			 src/system_monitor.c
+
+ifeq ($(CONFIG_LCD),y)
+	include $(LVGL_PATH)/lvgl.mk
+	CSRCS   += src/lcd_manager.c   \
+			 src/lcd_drawer.c   \
+			 src/assets/crabpower.c
+	CSRCS	+= $(LVGL_SRCS)
+endif
+
 VENDOR_SRCS += $(CJSON_PATH)/cJSON.c
 MAINSRC = ares_main.c
 

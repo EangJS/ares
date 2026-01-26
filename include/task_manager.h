@@ -34,7 +34,7 @@ extern "C" {
  *
  * This function creates and starts all tasks defined in the task table.
  */
-void run_tasks(void);
+int run_tasks( int argc, char *argv[] );
 
 #ifdef __cplusplus
 }

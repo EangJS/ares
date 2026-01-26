@@ -464,13 +464,19 @@ extern "C"
 
     int play_music( int argc, char *argv[] )
     {
+        const char *name = "soundplayer";
+        const char *path = "/res/kernel/audio/test.mp3";
+        const char *volume = "3";
+        const char *sample_rate = "48000";
+        const char *stream_policy = "1";
+        const char *looping = "0";
         char *player_argv[] = {
-            "soundplayer",                // UNUSED
-            "/res/kernel/audio/test.mp3", // contents path
-            "3",                          // volume
-            "48000",                      // sample rate
-            "1",                          // stream policy
-            "0",                          // looping
+            (char *)name,
+            (char *)path,
+            (char *)volume,
+            (char *)sample_rate,
+            (char *)stream_policy,
+            (char *)looping
         };
 
         int player_argc = 6;
@@ -489,7 +495,7 @@ extern "C"
         {
             pid_t pid = task_create( "play_music", SCHED_PRIORITY_DEFAULT, 16384, play_music, NULL );
             waitpid( pid, NULL, 0 );
-            sleep( 3 );
+            sleep( 5 );
         }
     }
 
