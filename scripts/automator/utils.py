@@ -20,20 +20,24 @@ def apply_patches(patch_dir, ares_dir, tizen_dir):
         elif "ares" in patch_file.lower():
             run(f"git apply {patch_path}", cwd=ares_dir)
 
-def clone(tizenrt_dir, ares_dir, clone_ares=False):
-    # Clone repo if not already present
+def clone(repo_url, target_dir, requires_submodule=False):
+    run(f"git clone {repo_url} {target_dir}")
+    if requires_submodule:
+        run("git submodule update --init --recursive", cwd=target_dir)
+
+def clone_repos(tizenrt_dir, ares_dir, clone_ares=False):
     os_dir = os.path.join(tizenrt_dir, "os")
     patch_dir = os.path.join(ares_dir, "scripts", "patches")
     requires_patching = False
     if not os.path.isdir(tizenrt_dir):
-        run(f"git clone {TIZENRT_REPO} {tizenrt_dir}")
         requires_patching = True
+        clone(TIZENRT_REPO, tizenrt_dir)
     else:
         print("TizenRT already cloned, skipping clone.")
-    
+
     if clone_ares:
         if not os.path.isdir(ares_dir):
-            run(f"git clone {ARES_REPO} {ares_dir}")
+            clone(ARES_REPO, ares_dir, requires_submodule=True)
         else:
             print("Ares already cloned, skipping clone.")
     elif not os.path.isdir(ares_dir):
@@ -42,7 +46,6 @@ def clone(tizenrt_dir, ares_dir, clone_ares=False):
 
     if requires_patching:
         apply_patches(patch_dir, ares_dir, tizenrt_dir)
-    run("git submodule update --init --recursive", cwd=ares_dir)
 
     if not os.path.isdir(os_dir):
         print("ERROR: os directory not found. Repo layout unexpected.")
@@ -52,7 +55,7 @@ def run(cmd, cwd=None):
     print(f"\n>>> {cmd}")
     result = subprocess.run(cmd, shell=True, check=True, cwd=cwd)
     print(f">>> Command finished with return code {result.returncode}")
-    
+
 def compress_directory(src_dir, tar_path):
     print(f"Compressing {src_dir} -> {tar_path}")
     with tarfile.open(tar_path, "w:xz") as tar:
@@ -83,7 +86,7 @@ def cleanup_artifacts(tizenrt_dir):
 
         if os.path.isfile(file_path) and filename not in allowed_files:
             os.remove(file_path)
-        
+
 def local_build(build_dir, tizenrt_dir, ares_dir, config):
     os_dir = os.path.join(tizenrt_dir, "os")
     run("chmod +x tools/configure.sh", cwd=os_dir)
@@ -103,5 +106,7 @@ def local_build(build_dir, tizenrt_dir, ares_dir, config):
     cleanup_artifacts(tizenrt_dir)
     print("\nBuild complete!")
     run(f"ls -l build/output/bin", cwd=tizenrt_dir)
-    run(f"mkdir -p {build_dir}/assets")
-    run(f"cp -r build/output/bin {build_dir}/assets/{config}", cwd=tizenrt_dir)
+    run(f"mkdir -p {build_dir}/assets/{config}")
+    run(f"cp os/.bininfo {build_dir}/assets/{config}/", cwd=tizenrt_dir)
+    run(f"cp -r build/output/bin {build_dir}/assets/{config}/", cwd=tizenrt_dir)
+

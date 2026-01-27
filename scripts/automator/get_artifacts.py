@@ -77,12 +77,12 @@ def download_artifacts_from_github(repo, workflow_file=None, dest_dir="./artifac
         print(f"Extracted zip to '{extract_path}'")
 
         # Extract tar.xz inside zip
-        assets_dir = os.path.join(extract_path, "assets")
-        for file_name in os.listdir(assets_dir):
+        for file_name in os.listdir(extract_path):
             if file_name.endswith(".tar.xz"):
                 file_name_only = file_name[:-7]  # Remove .tar.xz
-                tar_path = os.path.join(assets_dir, file_name)
+                tar_path = os.path.join(extract_path, file_name)
                 print(f"Extracting tar.xz: {tar_path}")
                 with tarfile.open(tar_path, "r:xz") as tar:
                     tar.extractall(dest_dir + f"/{file_name_only}")
                 print(f"Extracted tar.xz to '{dest_dir + f"/{file_name_only}"}'")
+

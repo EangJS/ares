@@ -52,7 +52,9 @@ def run_ares(port):
         time.sleep(0.1)
 
 def main(args):
+    run("sudo rm -rf /tmp/build")
     if args.download_artifacts:
+        clone_repos(TIZENRT_DIR, f"{TIZENRT_DIR}/apps/examples/ares", clone_ares=False)
         download_artifacts_from_github(
             repo="EangJS/ares",
             workflow_file="ci.yml",
@@ -60,14 +62,15 @@ def main(args):
             github_token=os.getenv("GITHUB_PAT"),
         )
         if args.config:
-            copy_files(f"{TIZENRT_DIR}/build/output/ares_{args.config}/bin/*", f"{TIZENRT_DIR}/build/output/bin")
-            flash_board(args.port)
+            copy_files(f"{TIZENRT_DIR}/build/output/ares/assets/{args.config}/bin/*", f"{TIZENRT_DIR}/build/output/bin")
+            run(f"cp {TIZENRT_DIR}/build/output/ares/assets/{args.config}/.bininfo {TIZENRT_DIR}/os")
     elif args.build:
-        clone(TIZENRT_DIR, f"{TIZENRT_DIR}/apps/examples/ares", clone_ares=True)
+        clone_repos(TIZENRT_DIR, f"{TIZENRT_DIR}/apps/examples/ares", clone_ares=True)
         local_build(build_dir=f"{TIZENRT_DIR}/build", tizenrt_dir=TIZENRT_DIR, ares_dir=f"{TIZENRT_DIR}/apps/examples/ares", config=args.config)
-        flash_board(args.port)
     else:
-        flash_board(args.port)
+        clone_repos(TIZENRT_DIR, f"{TIZENRT_DIR}/apps/examples/ares", clone_ares=False)
+
+    flash_board(args.port)
     run_ares(args.port)
 
 # example command: python3 autodownload.py --port ttyUSB0 --download-artifacts True --config ares_ddr
