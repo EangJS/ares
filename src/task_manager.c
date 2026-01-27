@@ -18,7 +18,7 @@ static char *fs_mnt0_argv[] = { MNT0_PATH, NULL };
 static const task_t task_table[] = {
 #ifdef CONFIG_LCD
     TASK_DEFINE( "lvgl_tick"  , SCHED_PRIORITY_DEFAULT + 10, 1024 , task_lvgl_tick             , NULL        , CPU1_AFFINITY )
-    TASK_DEFINE( "lvgl_drawer", SCHED_PRIORITY_DEFAULT + 10 , 65536, task_draw_lcd              , NULL        , CPU1_AFFINITY )
+    TASK_DEFINE( "lvgl_drawer", SCHED_PRIORITY_DEFAULT + 9 , 65536, task_draw_lcd              , NULL        , CPU1_AFFINITY )
     TASK_DEFINE( "lcd_power"  , SCHED_PRIORITY_DEFAULT     , 4096 , task_power_lcd             , NULL        , CPU0_AFFINITY )
 #endif /* CONFIG_LCD */
     TASK_DEFINE( "wifi"       , SCHED_PRIORITY_DEFAULT     , 16384, wifi_runnable              , NULL        , CPU0_AFFINITY )

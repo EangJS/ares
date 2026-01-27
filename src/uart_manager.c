@@ -96,6 +96,7 @@ static int uart_rx_loop( pthread_addr_t *arg )
         {
             printf( "RESULT(%d): FAILED (It does not match)\n", rx_test_count );
         }
+        sleep( 3 );
     }
 
     close( fd );

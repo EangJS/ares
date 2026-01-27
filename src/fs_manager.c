@@ -83,7 +83,7 @@ static void *task_write_fs( void *arg )
             printf( "Writer: open failed for %s\n", path );
         }
         pthread_mutex_unlock( &g_mutex_fs_ready );
-        sleep( 3 );
+        sleep( 5 );
     }
     return NULL;
 }
@@ -102,7 +102,7 @@ static void *task_read_fs( void *arg )
         {
             printf( "Reader: open failed for %s\n", path );
             pthread_mutex_unlock( &g_mutex_fs_ready );
-            sleep( 3 );
+            sleep( 5 );
             continue;
         }
 
