@@ -365,9 +365,9 @@ CONFIG_ARCH_BOARD_HAVE_FLASH=y
 #
 CONFIG_FLASH_PARTITION=y
 CONFIG_FLASH_MINOR=0
-CONFIG_FLASH_PART_SIZE="60,40,12,400,1744,5604,584,1744,5604,584,8,"
-CONFIG_FLASH_PART_TYPE="none,none,none,none,kernel,bin,bin,kernel,bin,bin,bootparam,"
-CONFIG_FLASH_PART_NAME="bl1,reserved,ftl,ss,kernel,common,app1,kernel,common,app1,bootparam,"
+CONFIG_FLASH_PART_SIZE="60,40,12,400,5036,5036,5280,512,8,"
+CONFIG_FLASH_PART_TYPE="none,none,none,none,kernel,kernel,smartfs,ftl,bootparam,"
+CONFIG_FLASH_PART_NAME="bl1,reserved,ftl,ss,kernel,kernel,userfs,micom,bootparam,"
 CONFIG_ARCH_BOARD_HAVE_SECOND_FLASH=y
 
 #
