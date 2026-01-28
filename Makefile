@@ -75,7 +75,8 @@ CSRCS     += src/task_manager.c \
 			 src/fs_manager.c    \
 			 src/pm_manager.c    \
 			 src/data_parser.c         \
-			 src/system_monitor.c
+			 src/system_monitor.c \
+			 src/netstress_manager.c
 
 ifeq ($(CONFIG_LCD),y)
 	include $(LVGL_PATH)/lvgl.mk

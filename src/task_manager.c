@@ -28,6 +28,7 @@ static const task_t task_table[] = {
     TASK_DEFINE( "power"      , SCHED_PRIORITY_DEFAULT     , 4096 , task_start_power_management, NULL        , CPU0_AFFINITY )
     TASK_DEFINE( "monitor"    , SCHED_PRIORITY_DEFAULT     , 8192 , monitor_task               , NULL        , CPU0_AFFINITY )
     TASK_DEFINE( "audio"      , SCHED_PRIORITY_DEFAULT     , 65536, task_play_sound            , NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "netstress"  , SCHED_PRIORITY_DEFAULT     , 65536, task_start_netstress       , NULL        , CPU0_AFFINITY )
 };
 
 /* ******************************************************************************* */

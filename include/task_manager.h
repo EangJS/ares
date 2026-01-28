@@ -24,6 +24,7 @@ extern "C" {
 #include "pm_runner.h"
 #include "monitor.h"
 #include "lcd_drawer.h"
+#include "netstress_manager.h"
 
 /*============================================================
  *  Public Function Prototypes

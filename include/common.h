@@ -1,0 +1,7 @@
+#define SERVER_IP   "192.168.31.7"
+#define HTTP_SERVER_PORT "5000"
+
+#define TCP_LISTEN_PORT "5002"
+#define UDP_LISTEN_PORT "5001"
+#define TCP_CLIENT_PORT "5002"
+#define UDP_CLIENT_PORT "5001"

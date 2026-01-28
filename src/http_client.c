@@ -8,12 +8,13 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "common.h"
 
 /* ******************************************************************************* */
 /*                           Macro Defnitions                                      */
 /* ******************************************************************************* */
 
-#define REQUEST_URL "http://192.168.31.7:5000/now/"
+#define REQUEST_URL "http://" SERVER_IP ":" HTTP_SERVER_PORT "/now/"
 #define REQUEST_BUFFER_SIZE ( 1024 * 4 )
 
 extern uint8_t is_wifi_connected;
