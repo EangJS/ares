@@ -76,7 +76,7 @@ CSRCS     += src/task_manager.c \
 			 src/pm_manager.c    \
 			 src/data_parser.c         \
 			 src/system_monitor.c \
-			 src/netstress_manager.c
+			 src/netstress_manager.c \
 			 src/ota_manager.c \
 			 src/kernel_update.c
 

@@ -24,6 +24,8 @@
 #define LCD_H CONFIG_LCD_XRES
 #define BYTES_PER_PIXEL 2
 #define IMG_NAME crabpower
+#define RUNNING_STATE 0
+#define OTA_STATE 1
 
 /* ******************************************************************************* */
 /*                           Public Variable Declarations                          */
@@ -42,6 +44,8 @@ LV_IMG_DECLARE( IMG_NAME );
 static int lcd_fd = -1;
 static lv_display_t *disp;
 static lv_obj_t *price_label = NULL;
+static lv_anim_t* animation;
+
 
 /* ******************************************************************************* */
 /*                           Private Function Declarations                         */
@@ -137,7 +141,7 @@ static void lcd_draw( void )
     lv_img_set_src( img, &IMG_NAME );
     lv_obj_align( img, LV_ALIGN_LEFT_MID, 10, 0 );
 
-    static lv_anim_t a; // keep static to avoid going out of scope
+    static lv_anim_t a;
     lv_anim_init( &a );
     lv_anim_set_var( &a, img );
     lv_anim_set_exec_cb( &a, anim_x_cb );
@@ -148,12 +152,22 @@ static void lcd_draw( void )
     lv_anim_set_path_cb( &a, lv_anim_path_linear );
     lv_anim_set_playback_time( &a, 2000 );
     lv_anim_set_repeat_count( &a, LV_ANIM_REPEAT_INFINITE );
-    lv_anim_start( &a );
+    animation = lv_anim_start( &a );
 
     // --- Static Stock Price Label ---
     price_label = lv_label_create( lv_scr_act() );
     lv_obj_align( price_label, LV_ALIGN_TOP_RIGHT, -10, 10 );
     lv_obj_set_style_text_font( price_label, &lv_font_montserrat_14, 0 );
+}
+
+static void resume_animation( void )
+{
+    lv_anim_resume( animation );
+}
+
+static void pause_animation( void )
+{
+    lv_anim_pause( animation );
 }
 
 /* ******************************************************************************* */
@@ -167,6 +181,7 @@ int task_draw_lcd( int argc, char *argv[] )
     lv_port_disp_init();
     lcd_draw();
     uint32_t i = 0;
+    uint8_t current_state = RUNNING_STATE;
 
     while ( 1 )
     {
@@ -176,11 +191,30 @@ int task_draw_lcd( int argc, char *argv[] )
         }
         if ( ( i % 200 ) == 0 )
         {
-            char *time_str;
-            if ( mq_receive( time_status_mq, (char *)&time_str, sizeof( time_str ), NULL ) > 0 )
+            if ( is_ota_in_progress() )
             {
-                lv_label_set_text( price_label, time_str );
-                free( time_str );
+                if ( current_state != OTA_STATE )
+                {
+                    current_state = OTA_STATE;
+                    pause_animation();
+                }
+                lv_label_set_text( price_label, "OTA In Progress" );
+                i++;
+                sleep( 3 );
+            }
+            else
+            {
+                if ( current_state != RUNNING_STATE )
+                {
+                    current_state = RUNNING_STATE;
+                    resume_animation();
+                }
+                char *time_str;
+                if ( mq_receive( time_status_mq, (char *)&time_str, sizeof( time_str ), NULL ) > 0 )
+                {
+                    lv_label_set_text( price_label, time_str );
+                    free( time_str );
+                }
             }
         }
         i++;

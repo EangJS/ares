@@ -2,10 +2,11 @@
 #include "wifi_runner.h"
 #include <fcntl.h>
 #include <mqueue.h>
+#include <semaphore.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <tinyara/config.h>
-#include <semaphore.h>
+#include <pthread.h>
 
 /* ******************************************************************************* */
 /*                           Macro Defnitions                                      */
@@ -21,7 +22,9 @@
 /*                           Public Variable Declarations                          */
 /* ******************************************************************************* */
 mqd_t time_status_mq;
-static volatile uint8_t wifi_status = 0;
+pthread_mutex_t wifi_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t wifi_cond = PTHREAD_COND_INITIALIZER;
+int wifi_status = 0;
 
 /* ******************************************************************************* */
 /*                           Private Function Declarations                         */
@@ -31,7 +34,7 @@ static void init_wifi( void );
 static void connect_wifi( void );
 static void get_wifi_info( void );
 static int mq_init( void );
-static void wifi_set_ready(void);
+static void wifi_set_ready( void );
 
 /* ******************************************************************************* */
 /*                           Private Function Defnitions                           */
@@ -81,28 +84,36 @@ static int mq_init( void )
     return 0;
 }
 
-static void wifi_set_ready(void)
+static void wifi_set_ready( void )
 {
-  wifi_status |= WIFI_CONNECTED_BIT;
+    pthread_mutex_lock(&wifi_mutex);
+    wifi_status |= WIFI_CONNECTED_BIT;
+    pthread_cond_broadcast(&wifi_cond);
+    pthread_mutex_unlock(&wifi_mutex);
 }
 
 /* ******************************************************************************* */
 /*                           Public Function Defnitions                            */
 /* ******************************************************************************* */
 
-void wait_for_wifi(void)
+void wait_for_wifi( void )
 {
-  while (!(wifi_status & WIFI_CONNECTED_BIT))
-  {
-    usleep(100000);
-  }
+    pthread_mutex_lock(&wifi_mutex);
+
+    while (!(wifi_status & WIFI_CONNECTED_BIT))
+    {
+        pthread_cond_wait(&wifi_cond, &wifi_mutex);
+    }
+
+    pthread_mutex_unlock(&wifi_mutex);
 }
 
 int wifi_runnable( int argc, char *argv[] )
 {
     init_wifi();
-    sleep( 5 );
+    sleep( 3 );
     connect_wifi();
+    sleep( 5 );
     wifi_set_ready();
     if ( mq_init() < 0 )
     {
@@ -128,6 +139,6 @@ int wifi_runnable( int argc, char *argv[] )
             free( time_str );
         }
 
-        sleep( 1 );
+        sleep( 10 );
     }
 }

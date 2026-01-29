@@ -14,7 +14,7 @@
 /* ******************************************************************************* */
 
 static char *fs_mnt_argv[] = { MNT_PATH, NULL };
-static char *fs_mnt0_argv[] = { MNT0_PATH, NULL };
+
 static const task_t task_table[] = {
 #ifdef CONFIG_LCD
     TASK_DEFINE( "lvgl_tick"  , SCHED_PRIORITY_DEFAULT + 10, 1024 , task_lvgl_tick             , NULL        , CPU1_AFFINITY )

@@ -1,0 +1,56 @@
+---
+config:
+  layout: elk
+---
+flowchart LR
+ USER["User"]
+ USER@{ icon: "aws:res-user", pos: "b"}
+ 
+ subgraph Server["Test Server"]
+        TS["Time Service"]
+        IPLOG["IP Address Logger"]
+        QUEUE["Client IP Queue"]
+        RAND["UDP/TCP Client"]
+        SOCKET_SERVER["UDP/TCP Server"]
+        UART_TX["UART TX Only"]
+  end
+ subgraph Device["Device Under Test"]
+        HTTP["HTTP Client"]
+        XXP_SRV["UDP/TCP Server"]
+        XXP_CLT["UDP/TCP Client"]
+        LVGL_DRAWER["LVGL Processor"]
+        LCD_DISPLAY["LCD Display"]
+        AUDIO["Audio Playback"]
+        EXT_FLASH["EXT_Flash R/W"]
+        PM["Power Manager / Sleep"]
+        DATA_PROCESSOR["Data Processor"]
+        LOGUART["LOGUART"]
+        UART1_RX["UART1_RX"]
+        LCD_POWER_MANAGER["LCD_PWR_MGR"]
+        OTN_MANAGER["OTN_MGR"]
+        
+  end
+    TS --> IPLOG
+    IPLOG --> QUEUE
+    QUEUE --> RAND
+    HTTP ---> DATA_PROCESSOR
+    DATA_PROCESSOR --> LVGL_DRAWER
+    LVGL_DRAWER --> LCD_DISPLAY
+    LCD_POWER_MANAGER -. toggle power n seconds .-> LCD_DISPLAY
+    EXT_FLASH -. sleep n seconds .-> EXT_FLASH
+    EXT_FLASH -. write/read result .-> LOGUART
+    OTN_MANAGER -. sleep n minutes .-> OTN_MANAGER
+    PM -. sleep when idle .-> PM
+    HTTP -- HTTP GET Time --> TS
+    TS -- Time Response --> HTTP
+    RAND -- UDP/TCP Random Data --> XXP_SRV
+    XXP_SRV --> LOGUART
+    UART_TX -- UART (TX) --> UART1_RX
+    UART1_RX -- Match Status --> LOGUART
+    AUDIO -. sleep n seconds .-> AUDIO
+    XXP_CLT -- UDP/TCP Random Data --> SOCKET_SERVER
+
+
+    LOGUART --> USER
+    LCD_DISPLAY --> USER
+    AUDIO --> USER
