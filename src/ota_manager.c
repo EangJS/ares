@@ -5,7 +5,7 @@
 
 static volatile uint8_t ota_in_progress = 0;
 sem_t ota_complete_semaphore;
-
+extern volatile bool lcd_on;
 static void run_kernel_update( void )
 {
     binary_update_same_version_test();
@@ -28,11 +28,18 @@ while (1) {
 
     ota_in_progress = 1;
     sleep(10); // Give some time to prepare for OTA
+    power_test(100);
+    lcd_on = true;
+    printf("OTN START......\n");
     run_kernel_update();
+    printf("OTN DONE......\n");
     ota_in_progress = 0;
-    sleep(MINUTES(5));
-
+    power_test(0);
+    lcd_on = false;
     sem_post(&ota_complete_semaphore);
+
+    sleep(MINUTES(15));
+
 }
     
     return 0;
