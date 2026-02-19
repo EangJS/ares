@@ -42,7 +42,6 @@ uint8_t update_state( uint8_t current_state )
     {
         if ( current_state != OTA_STATE )
         {
-            set_lcd_power( 100 );
             current_state = OTA_STATE;
             await_ota_completion();
         }
