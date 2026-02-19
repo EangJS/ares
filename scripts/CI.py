@@ -13,7 +13,7 @@ from automator.utils import *
 
 BUILD_DIR = "/tmp/build"
 TIZENRT_DIR = BUILD_DIR + "/TizenRT"
-CONFIGS = ["ares_ddr", "ares_ddr_st7785", "ares_psram"]
+CONFIGS = ["ares_ddr_st7785", "ares_psram"]
 
 def get_next_build_number(repo_url, repo_name, auth):
     """

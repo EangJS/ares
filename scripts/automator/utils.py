@@ -43,6 +43,8 @@ def clone_repos(tizenrt_dir, ares_dir, clone_ares=False):
     elif not os.path.isdir(ares_dir):
         run(f"mkdir -p {ares_dir}")
         run(f"cp -r . {ares_dir}/", cwd="..")
+    run("git submodule update --init --recursive", cwd=ares_dir)
+    
 
     if requires_patching:
         apply_patches(patch_dir, ares_dir, tizenrt_dir)

@@ -2,6 +2,11 @@
 #include <semaphore.h>
 
 #define MINUTES( x ) ( ( x ) * 60 )
+#ifdef CONFIG_LCD
+#define LCD_POWER_SET( x ) set_lcd_power( x )
+#else
+#define LCD_POWER_SET( x )
+#endif /* CONFIG_LCD */
 
 static volatile uint8_t ota_in_progress = 0;
 sem_t ota_complete_semaphore;
@@ -27,15 +32,13 @@ while (1) {
     while (sem_trywait(&ota_complete_semaphore) == 0);
 
     ota_in_progress = 1;
-    sleep(10); // Give some time to prepare for OTA
-    power_test(100);
-    lcd_on = true;
+    sleep(10); // Give some time for other tasks to prepare for OTA
+    LCD_POWER_SET( 100 );
     printf("OTN START......\n");
     run_kernel_update();
     printf("OTN DONE......\n");
     ota_in_progress = 0;
-    power_test(0);
-    lcd_on = false;
+    LCD_POWER_SET( 0 );
     sem_post(&ota_complete_semaphore);
 
     sleep(MINUTES(15));
