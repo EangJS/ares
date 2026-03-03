@@ -120,6 +120,8 @@ uint16_t test_scanned_count = 0;
 uint16_t test_scan_round_count = 0;
 uint8_t test_recv_gatt_counter = 0;
 
+static void ble_device_disconnected_cb(ble_client_ctx *ctx, uint16_t reason);
+
 static void ble_test_scan_state_changed_cb(ble_scan_state_e scan_state)
 {
 	RMC_LOG(RMC_CLIENT_TAG, "'%s' is called[%d]\n", __FUNCTION__, scan_state);
@@ -204,7 +206,7 @@ static ble_scan_callback_list test_scan_config = {
 };
 
 static ble_client_callback_list test_client_config = {
-	ble_test_device_disconnected_cb,
+	ble_device_disconnected_cb,
 	ble_test_device_connected_cb,
 	ble_test_operation_cb,
 	ble_test_operation_cb,
@@ -694,9 +696,9 @@ static void ble_device_scanned_cb_for_connect(ble_scanned_device *scanned_device
 	}
 }
 
-static void ble_device_disconnected_cb(ble_client_ctx *ctx)
+static void ble_device_disconnected_cb(ble_client_ctx *ctx, uint16_t cause)
 {
-	RMC_LOG(RMC_CLIENT_TAG, "'%s' is called[ID : %d]\n", __FUNCTION__, ctx->conn_handle);
+	RMC_LOG(RMC_CLIENT_TAG, "'%s' is called[ID : %d] cause: %d\n", __FUNCTION__, ctx->conn_handle, cause);
 	return;
 }
 
