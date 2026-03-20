@@ -68,25 +68,26 @@ CFLAGS    += -I$(APPDIR)/examples/ares/include \
              -I$(CJSON_PATH)
 CXXFLAGS  += -I$(APPDIR)/examples/ares/include
 CXXSRCS   += src/sound_manager.cpp
-CSRCS     += src/task_manager.c \
-			 src/wifi_manager.c  \
-			 src/http_client.c  \
-			 src/uart_manager.c  \
-			 src/fs_manager.c    \
-			 src/pm_manager.c    \
-			 src/data_parser.c         \
-			 src/system_monitor.c \
-			 src/netstress_manager.c \
-			 src/ota_manager.c \
-			 src/kernel_update.c \
-			 src/ble_manager.c \
-			 src/ble_rmc.c
+CSRCS     += src/task_manager.c       \
+			 src/wifi_manager.c       \
+			 src/http_client.c        \
+			 src/uart_manager.c       \
+			 src/fs_manager.c         \
+			 src/pm_manager.c         \
+			 src/data_parser.c        \
+			 src/system_monitor.c     \
+			 src/netstress_manager.c  \
+			 src/ota_manager.c        \
+			 src/kernel_update.c      \
+			 src/ble_manager.c        \
+			 src/ble_rmc.c            \
+			 src/gpio_manager.c
 
 ifeq ($(CONFIG_LCD),y)
 	include $(LVGL_PATH)/lvgl.mk
-	CSRCS   += src/lcd_manager.c   \
-			 src/lcd_drawer.c   \
-			 src/assets/crabpower.c \
+	CSRCS   += src/lcd_manager.c      \
+			 src/lcd_drawer.c         \
+			 src/assets/crabpower.c   \
 			 src/assets/realtek.c
 	CSRCS	+= $(LVGL_SRCS)
 endif
