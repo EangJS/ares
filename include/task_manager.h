@@ -27,6 +27,7 @@ extern "C" {
 #include "netstress_manager.h"
 #include "ota_manager.h"
 #include "ble_manager.h"
+#include "gpio_manager.h"
 
 /*============================================================
  *  Public Function Prototypes

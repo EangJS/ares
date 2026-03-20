@@ -30,6 +30,7 @@ static const task_t task_table[] = {
     TASK_DEFINE( "netstress"  , SCHED_PRIORITY_DEFAULT     , 65536, task_start_netstress       , NULL        , CPU0_AFFINITY )
     TASK_DEFINE( "ota"        , SCHED_PRIORITY_DEFAULT     , 65536, ota_manager_runnable       , NULL        , CPU0_AFFINITY )
     TASK_DEFINE( "ble"        , SCHED_PRIORITY_DEFAULT     , 65536, ble_runnable               , NULL        , CPU0_AFFINITY )
+    TASK_DEFINE( "gpio"       , SCHED_PRIORITY_DEFAULT     , 1024,  gpio_runnable              , NULL        , CPU0_AFFINITY )
 };
 
 /* ******************************************************************************* */
