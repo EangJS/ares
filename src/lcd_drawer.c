@@ -26,7 +26,7 @@
 #define IMG_NAME crabpower
 #define RUNNING_STATE 0
 #define OTA_STATE 1
-#define PROGRESS_BAR_INIT 0
+#define PROGRESS_BAR_INIT -2
 #define PROGRESS_BAR_DESTROY -1
 
 /* ******************************************************************************* */
@@ -35,6 +35,8 @@
 
 extern bool lcd_on;
 extern mqd_t time_status_mq;
+extern int32_t ota_percentage;
+extern char curr_binary_name[16];
 
 /* ******************************************************************************* */
 /*                           Private Variable Declarations                         */
@@ -233,8 +235,12 @@ int task_draw_lcd( int argc, char *argv[] )
                     destroy_animation();
                     set_progress_bar( PROGRESS_BAR_INIT );
                 }
-                set_progress_bar( i % 99 + 1 );
-                lv_label_set_text( price_label, "OTA In Progress" );
+                set_progress_bar( ota_percentage );
+                char status[64];
+                snprintf(status, sizeof(status),
+                        "%d%%: %s OTA In Progress",
+                        ota_percentage, curr_binary_name );
+                lv_label_set_text( price_label, status );
             }
             else
             {
