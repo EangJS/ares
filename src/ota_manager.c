@@ -11,6 +11,7 @@
 static volatile uint8_t ota_in_progress = 0;
 sem_t ota_complete_semaphore;
 extern volatile bool lcd_on;
+
 static void run_kernel_update( void )
 {
     binary_update_same_version_test();

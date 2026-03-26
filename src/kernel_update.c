@@ -58,6 +58,8 @@
 
 static int fail_cnt = 0;
 static int update_type_flag = 0;
+int32_t ota_percentage = 0;
+char curr_binary_name[16] = {0};
 
 static void print_binary_info( binary_update_info_t *binary_info )
 {
@@ -281,7 +283,11 @@ static int binary_update_download_binary( binary_update_info_t *binary_info, boo
         }
         crc_hash = crc32part( buffer, read_size, crc_hash );
         copy_size += read_size;
-        printf( "Copy %s binary to %s [%d%%]\r", binary_info->name, download_path, copy_size * 100 / total_size );
+        ota_percentage = (copy_size * 100) / total_size;
+        strncpy( curr_binary_name, binary_info->name, 15 );
+        curr_binary_name[15] = '\0';
+
+        printf( "Copy %s binary to %s [%d%%]\r", binary_info->name, download_path, ota_percentage );
     }
     printf( "\nCopy SUCCESS\n" );
 

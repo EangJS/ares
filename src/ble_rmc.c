@@ -68,9 +68,9 @@ static uint8_t g_adv_resp_2[] = {
 	0x11, 0x09, '2', 'I', 'Z', 'E', 'N', 'R', 'T', ' ', 'T', 'E', 'S', 'T', '(', '0', '2', ')',
 };
 
-const uint8_t def_ext_addr_val[BLE_BD_ADDR_MAX_LEN] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66 };
+uint8_t def_ext_addr_val[BLE_BD_ADDR_MAX_LEN] = { 0x11, 0x22, 0x33, 0x44, 0x55, 0x66 };
 
-const uint8_t def_ext_adv_data[] = {
+uint8_t def_ext_adv_data[] = {
 	0x02,			// Flags
 	0x01,			// RTK_BT_LE_GAP_ADTYPE_FLAGS,
 	0x01 | 0x04,	// RTK_BT_LE_GAP_ADTYPE_FLAGS_LIMITED | RTK_BT_LE_GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
@@ -80,7 +80,7 @@ const uint8_t def_ext_adv_data[] = {
 	'0', 'E', 'K', '_', 'B', 'T', '_', 'P', 'E', 'R', 'I', 'P', 'H', 'E', 'R', 'A', 'L',
 };
 
-const uint8_t def_ext_resp_data[] = {
+uint8_t def_ext_resp_data[] = {
 	0x02,			// Flags
 	0x01,			// RTK_BT_LE_GAP_ADTYPE_FLAGS,
 	0x01 | 0x04,	// RTK_BT_LE_GAP_ADTYPE_FLAGS_LIMITED | RTK_BT_LE_GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
@@ -90,7 +90,7 @@ const uint8_t def_ext_resp_data[] = {
 	'R', 'E', 'S', 'P', '0', '_', '_', 'P', 'E', 'R', 'I', 'P', 'H', 'E', 'R', 'A', 'L',
 };
 
-const static uint8_t local_data[4] = { 0xA1, 0xA2, 0xA3, 0x00};
+static uint8_t local_data[4] = { 0xA1, 0xA2, 0xA3, 0x00};
 static uint8_t coc_data[10] = { 0x67, 1, 2, 3, 4, 5, 6, 7, 0x88 };
 
 static char *__client_state_str(ble_client_state_e state)
