@@ -4,6 +4,7 @@ import curses
 import subprocess
 import re
 import os
+import sys
 import time
 import json
 
@@ -394,6 +395,11 @@ def main(stdscr):
         elif key in (ord('q'), ord('Q')):
             break
 
+def check_sudo():
+    if os.geteuid() != 0:
+        print("⚠️  Warning: This script should be run as root (sudo).")
+        sys.exit(1)
 
 if __name__ == "__main__":
+    check_sudo()
     curses.wrapper(main)
