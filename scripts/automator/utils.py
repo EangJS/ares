@@ -11,7 +11,7 @@ ARTIFACTS = ["km4_boot_all.bin", "*.trpk", "bootparam.bin", "target_img2.axf"]
 
 def apply_patches(patch_dir, ares_dir, tizen_dir):
     patch_files = [
-        f for f in os.listdir(patch_dir) if f.endswith('.patch')
+        f for f in os.listdir(patch_dir) if f.endswith('.diff')
     ]
     for patch_file in patch_files:
         patch_path = os.path.join(patch_dir, patch_file)
