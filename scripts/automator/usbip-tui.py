@@ -346,15 +346,18 @@ def main(stdscr):
     mode = "server"
     remote_ip = None
     selected_idx = 0
+    requires_refresh = False
+    devices = get_local_devices()
 
     while True:
-
-        if mode == "server":
-            devices = get_local_devices()
-        else:
-            if not remote_ip:
-                remote_ip = select_ip_menu(stdscr)
-            devices = get_remote_devices(remote_ip)
+        if requires_refresh:
+            if mode == "server":
+                devices = get_local_devices()
+            else:
+                if not remote_ip:
+                    remote_ip = select_ip_menu(stdscr)
+                devices = get_remote_devices(remote_ip)
+            requires_refresh = False
 
         if selected_idx >= len(devices):
             selected_idx = 0
@@ -373,9 +376,11 @@ def main(stdscr):
             mode = "client" if mode == "server" else "server"
             selected_idx = 0
             remote_ip = None
+            requires_refresh = True
 
         elif key in (ord('r'), ord('R')):
             selected_idx = 0
+            requires_refresh = True
 
         elif key == ord(' '):
             if not devices:
@@ -391,6 +396,7 @@ def main(stdscr):
                 else:
                     attach_device(remote_ip, selected["busid"])
                     time.sleep(0.5)
+            requires_refresh = True
 
         elif key in (ord('q'), ord('Q')):
             break
