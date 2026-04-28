@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import curses
 import subprocess
@@ -7,7 +7,7 @@ import os
 import sys
 import time
 import json
-
+import glob
 
 RECENT_IPS_FILE = os.path.expanduser("~/.usbip_recent_ips.json")
 MAX_RECENT = 10
@@ -16,6 +16,29 @@ MAX_RECENT = 10
 # ============================================================
 # SERVER SIDE
 # ============================================================
+
+def get_udev_name_from_sysfs(usb_busid):
+    """
+    Map busid like 1-1.4.3 → /dev/USBRelay_Left or /dev/FTDI_A
+    """
+
+    sysfs_path = f"/sys/bus/usb/devices/{usb_busid}"
+
+    if not os.path.exists(sysfs_path):
+        return None
+
+    # find hidraw or tty device under this USB path
+    for root, dirs, files in os.walk(sysfs_path):
+        for d in dirs:
+            if d.startswith("hidraw") or d.startswith("ttyUSB"):
+                dev_path = f"/dev/{d}"
+
+                # resolve udev symlink
+                for link in glob.glob("/dev/*"):
+                    if os.path.islink(link) and os.path.realpath(link) == os.path.realpath(dev_path):
+                        return os.path.basename(link)
+
+    return None
 
 def parse_local_list(output):
     devices = []
@@ -43,9 +66,10 @@ def parse_local_list(output):
         if current:
             name_match = name_pattern.search(line)
             if name_match:
+                udev_name = get_udev_name_from_sysfs(current["busid"])
                 manufacturer = name_match.group(1).strip()
                 product = name_match.group(2).strip()
-                current["name"] = f"{manufacturer} - {product}"
+                current["name"] = f"{manufacturer} - {product} - {udev_name}"
 
     if current:
         devices.append(current)
