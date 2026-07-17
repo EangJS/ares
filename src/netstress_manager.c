@@ -9,8 +9,8 @@ static void* tcp_nettest_server( void *arg )
 {
     while ( 1 )
     {
-        tcp_server_thread( 10 );
-        printf( "================== Received 10 TCP Packets ==================\n" );
+        tcp_server_thread( 1200 );
+        printf( "================== Received 1200 TCP Packets ==================\n" );
         sleep( 10 );
     }
 
@@ -21,7 +21,7 @@ static void* tcp_nettest_client( void *arg )
 {
     while ( 1 )
     {
-        char *argv[] = { "nettest", "2", "tcp", SERVER_IP, "5555", "10", "3" };
+        char *argv[] = { "nettest", "2", "tcp", SERVER_IP, "5555", "1200", "20" };
         int argc = 7;
 
         nettest_main( argc, argv );
@@ -35,8 +35,8 @@ static void* udp_nettest_server( void *arg )
 {
     while ( 1 )
     {
-        udp_server_thread( 10 );
-        printf( "================== Received 10 UDP Packets ==================\n" );
+        udp_server_thread( 1200 );
+        printf( "================== Received 1200 UDP Packets ==================\n" );
         sleep( 10 );
     }
 
@@ -47,7 +47,7 @@ static void* udp_nettest_client( void *arg )
 {
     while ( 1 )
     {
-        char *argv[] = { "nettest", "2", "udp", SERVER_IP, "5555", "10", "3" };
+        char *argv[] = { "nettest", "2", "udp", SERVER_IP, "5555", "1200", "20" };
         int argc = 7;
 
         nettest_main( argc, argv );
