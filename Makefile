@@ -81,6 +81,7 @@ CSRCS     += src/task_manager.c       \
 			 src/kernel_update.c      \
 			 src/ble_manager.c        \
 			 src/ble_rmc.c            \
+			 src/nettest_ares.c       \
 			 src/gpio_manager.c
 
 ifeq ($(CONFIG_LCD),y)
