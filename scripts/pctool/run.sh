@@ -19,6 +19,7 @@ SERIAL_PORT_3=/dev/ttyACM2
 ##### End of configuration #####
 
 docker run --rm -d \
+  -e PYTHONUNBUFFERED=1 \
   -p $TCP_PORT:$TCP_PORT \
   -p $FLASK_PORT:$FLASK_PORT \
   --name timeserver-app \
